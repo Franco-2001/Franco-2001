@@ -10,9 +10,11 @@
 
 </head>
 <body>
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
  
- <a class="navbar-brand" href="#">   
+ <a class="navbar-brand" href="inicio.php">   
    <img src="./resources/descarga (3).png" height="50" width="50"  class="foto" style="border-radius: 50%;">
  </a>
  <button class="navbar-toggler" type="button" data-toggle="collapse" 
@@ -23,14 +25,20 @@
  <div class="collapse navbar-collapse" id="navbarSupportedContent">
    <ul class="navbar-nav mr-auto">
        <li class="nav-item active">
-         <a class="nav-link" href="#">Nosotros <span class="sr-only">(current)</span></a>
+         <a class="nav-link" href="#">NOSOTROS <span class="sr-only">(current)</span></a>
        </li>
          <li class="nav-item active">
-         <a class="nav-link" href="">CONTACTO <span class="sr-only">(current)</span></a>
+         <a class="nav-link" href="login.php">INICIAR SESION  <span class="sr-only">(current)</span></a>
        </li>
        <li class="nav-item active">
-         <a class="nav-link" href="Index.php">INICIO  <span class="sr-only">(current)</span></a>
+         <a class="nav-link" href="inicio.php">INICIO  <span class="sr-only">(current)</span></a>
        </li>
+       <li class="nav-item active">
+              <a class="nav-link" href="Registrarse.php">REGISTRARSE  <span class="sr-only">(current)</span></a>
+       </li>
+       <li class="nav-item active">
+              <a class="nav-link" href="Reporte.php" target="_blank">MIS COMPRAS  <span class="sr-only">(current)</span></a>
+       <li>
    </ul>
  </div>
 </nav>
@@ -39,27 +47,59 @@
 <table class="table table-hover" id="table" style="background-color:light-blue";>
   <thead>
     <tr>
+      <th scope="col">ID-DESTINO</th>
       <th scope="col">DESTINO</th>
       <th scope="col">FECHA DE SALIDA</th>
       <th scope="col">PRECIO</th>
+      <th scope="col">ACCIONES</th>
+
     </tr>
   </thead>
   <tbody>
+<?php
+$destino= $_POST["destino"];
+$fecha_salida=$_POST["fecha-salida"];
+?>
+
 
 <?php
 $conn = mysqli_connect("localhost:3306", "root", "river2001", "turismo");
-$com = "select * from destinos";
+$com = "select * from destinos where nombre_ciudad like '%".$destino."%' and fecha_salida like '%".$fecha_salida."%' ";
 $result = $conn->query($com);
+
 try{
     while($row = $result->Fetch_assoc()){
 ?>
    
-    <tr>
+<tr>
+      <th ><?php echo $row["id"];?></th>
       <th ><?php echo $row["nombre_ciudad"];?></th>
-      <td ><?php echo $row["fecha"];?></td>
-      <td ><?php echo $row["importe"];?><a href="Compra.php"><button type="button" class="btn btn-primary" style="float:right;" style="text-align:right"; >Seleccionar</button></a></td>
-    </tr>
-
+      <td ><?php echo $row["fecha_salida"];?></td>
+      <td ><?php echo $row["importe"];?>
+      <td >
+      <form action="Compra.php" method="POST">
+         <input type="hidden"  name="id-destino" id="destino-id" value="<?php echo $row["id"];?>">
+         <input type="hidden"  name="nombre-ciudad" id="ciudad-id" value="<?php echo $row["nombre_ciudad"];?>">
+         <input type="hidden"  name="fecha" id="fecha" value="<?php echo $row["fecha_salida"];?>">
+         <input type="hidden"  name="importe" id="importe" value="<?php echo $row["importe"];?>">
+         <input type="submit" class="btn btn-primary" name="boton" id="boton" value="seleccionar">
+      </form>
+      <!----------------------------delete----------------------------------->
+     <form action="delete.php" method="POST">
+     <input type="hidden"  name="id-destino" id="destino-id" value="<?php echo $row["id"];?>">
+     <input  type="submit" class="btn btn-danger ml-2 name"  boton id="boton" value="eliminar">
+     </form>
+     <!----------------------------update----------------------------------->
+     <form action="actualizar.php" method="POST">
+         <input type="hidden"  name="id-destino" id="destino-id" value="<?php echo $row["id"];?>">
+         <input type="hidden"  name="nombre-ciudad" id="ciudad-id" value="<?php echo $row["nombre_ciudad"];?>">
+         <input type="hidden"  name="fecha" id="fecha" value="<?php echo $row["fecha_salida"];?>">
+         <input type="hidden"  name="importe" id="importe" value="<?php echo $row["importe"];?>">
+         <input type="submit" class="btn btn-info" name="boton" id="boton" value="actualizar">
+      </form>
+    </td>
+</tr>
+    
 <?php
     }
 }
@@ -69,6 +109,22 @@ catch(PDOException $e){
 ?>
 </tbody>
 </table>
+<a href="agregar.php"> <button type="submit" class="btn btn-success ml-2" style="float:right;">AGREGAR NUEVO DESTINO </button></a>
 
+ <!------footer---->
+<footer class="text-center text-lg-start" style="background-color: black; margin-top: 50%;">
+    <div class="container d-flex justify-content-center py-5">
+    </div>
+    <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2); " style="bottom:0;">
+    <div class="contactos"></div>
+            <h3> CONTACTOS:</h3>
+          <ul>
+            <li>Miviaje@gmail.com</li>
+            <li> @Miviaje</li>  
+            <li> +03416154567</li>  
+            <li>© 2020 Copyright</li>
+          </ul>
+    </div>
+  </footer>
 </body>
 </html>
