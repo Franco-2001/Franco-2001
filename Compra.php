@@ -91,8 +91,8 @@
           echo "Error: " . $sql . "<br>" . $conn->error;
         }
     }
-   ?>    
-</div>
+   ?> 
+</div>    
 
 </body>
 </html>
